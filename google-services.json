@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1036126128502",
+    "firebase_url": "https://mycontactlist-d9052.firebaseio.com",
+    "project_id": "mycontactlist-d9052",
+    "storage_bucket": "mycontactlist-d9052.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036126128502:android:3109cb1438037e37",
+        "android_client_info": {
+          "package_name": "com.example.sahilj.mycontactlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036126128502-pd93msq0s9gfkfcq8j14grj2hksmg3km.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sahilj.mycontactlist",
+            "certificate_hash": "f88f8a8d648f5cdd26f1e9d88221c31befea2c01"
+          }
+        },
+        {
+          "client_id": "1036126128502-h6ni9gu04hg58jkedongcj5dhoa0rap2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCetXDNTvDmi91k1z1pNpLsXv8jJgdjT_U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036126128502-h6ni9gu04hg58jkedongcj5dhoa0rap2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">MyContactList</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="string_phone_number">Mobile Number</string>
+    <string name="google_plus_icon">Google Plus Icon</string>
+    <string name="facebook_icon">Facebook Icon</string>
+    <string name="sign_up_icon">Sign Up Icon</string>
+    <string name="company_logo">Company Logo</string>
+    <string name="invalid_phone_number">Invalid Mobile Number</string>
+    <string name="valid_phone_number">Valid Mobile Number</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb').-->
+    <string name="facebook_application_id" translatable="false">211385026277017</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb211385026277017</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="instant_validation">Instant Validation</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="logout">Logout</string>
+
 </resources>

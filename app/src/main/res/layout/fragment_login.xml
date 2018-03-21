@@ -1,0 +1,164 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.sahilj.mycontactlist.SplashScreenActivity"
+    android:background="@color/colorYellow"
+    android:animateLayoutChanges="true">
+
+    <ImageView
+        android:id="@+id/imgCompanyLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:contentDescription="@string/company_logo"
+        android:src="@drawable/company_logo"
+        android:layout_marginBottom="@dimen/dimen_56dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rvLoginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgCompanyLogo"
+        android:layout_marginEnd="@dimen/dimen_16dp"
+        android:layout_marginStart="@dimen/dimen_16dp">
+        <LinearLayout
+            android:id="@+id/llMobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_margin="@dimen/dimen_16dp">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_contentColor="@android:color/white"
+                app:ccp_defaultNameCode="IN"
+                app:ccp_textGravity="CENTER"
+                app:ccp_showNameCode="false"
+                app:ccp_showFlag="false"
+                app:ccp_showFullName="false"
+                app:ccp_clickable="true"
+                app:ccp_showPhoneCode="true"
+                app:ccp_autoDetectCountry="true"
+                app:ccp_countryAutoDetectionPref="NETWORK_LOCALE_SIM"
+                app:ccp_autoDetectLanguage="true"
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/dimen_8dp"/>
+
+            <EditText
+                android:id="@+id/etMobileNumber"
+                android:inputType="phone"
+                android:digits="0123456789+"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/string_phone_number"
+                style="@style/MyEditText"
+                android:background="@android:color/transparent" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_56dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/sign_up_icon"
+            android:src="@drawable/ic_signup"
+            android:layout_toEndOf="@id/llMobile"
+            android:layout_marginTop="@dimen/dimen_16dp"
+            android:minWidth="@dimen/dimen_56dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12sp"
+            android:indeterminate="true"
+            android:backgroundTint="@android:color/white"
+            android:indeterminateTint="@android:color/white"
+            android:visibility="invisible"
+            android:layout_below="@id/llMobile" />
+
+        <View
+            android:id="@+id/bar"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@android:color/white"
+            android:layout_below="@id/llMobile"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bar"
+            android:layout_marginTop="@dimen/dimen_16dp"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/btnFacebook"
+                android:layout_width="@dimen/dimen_56dp"
+                android:layout_height="@dimen/dimen_56dp"
+                android:src="@drawable/ic_facebook"
+                android:contentDescription="@string/facebook_icon" />
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"/>
+
+            <ImageView
+                android:id="@+id/btnGoogle"
+                android:layout_width="@dimen/dimen_56dp"
+                android:layout_height="@dimen/dimen_56dp"
+                android:src="@drawable/ic_google_plus"
+                android:contentDescription="@string/google_plus_icon" />
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/llCodeVerificationLayout"
+        android:layout_below="@id/imgCompanyLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_16dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etVerificationCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/verification_code"
+                style="@style/MyEditText"
+                android:background="@drawable/border"
+                android:visibility="visible"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:inputType="number"
+                android:digits="0123456789"/>
+
+            <ImageView
+                android:id="@+id/btnVerification"
+                android:layout_width="@dimen/dimen_56dp"
+                android:layout_height="@dimen/dimen_56dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/sign_up_icon"
+                android:src="@drawable/ic_signup" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/btnCodeResend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resend_code"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
+            android:padding="@dimen/dimen_16dp"/>
+    </LinearLayout>
+</RelativeLayout>
