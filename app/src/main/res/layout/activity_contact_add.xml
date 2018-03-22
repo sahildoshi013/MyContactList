@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView
+    android:id="@+id/mainLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -165,15 +167,31 @@
                 android:onClick="getLocationFromMap"/>
         </LinearLayout>
 
-        <ImageView
+        <RelativeLayout
             android:layout_width="@dimen/dimen_56dp"
             android:layout_height="@dimen/dimen_56dp"
-            app:srcCompat="@drawable/ic_signup"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_16dp"
-            android:contentDescription="@string/button_to_add_new_contact"
-            android:onClick="addContact"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/dimen_16dp">
 
+            <ProgressBar
+                android:layout_width="@dimen/dimen_56dp"
+                android:layout_height="@dimen/dimen_56dp"
+                android:indeterminate="true"
+                android:backgroundTint="@android:color/white"
+                android:indeterminateTint="@android:color/white"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/btnAddContact"
+                android:layout_width="@dimen/dimen_56dp"
+                android:layout_height="@dimen/dimen_56dp"
+                app:srcCompat="@drawable/ic_signup"
+                android:layout_gravity="center"
+                android:contentDescription="@string/button_to_add_new_contact"
+                android:onClick="addContact"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>
