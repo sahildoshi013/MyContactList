@@ -1,9 +1,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.sahilj.mycontactlist.SplashScreenActivity"
     android:background="@color/colorYellow"
     android:animateLayoutChanges="true">
@@ -25,12 +25,15 @@
         android:layout_below="@id/imgCompanyLogo"
         android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp">
+
         <LinearLayout
             android:id="@+id/llMobile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
-            android:layout_margin="@dimen/dimen_16dp">
+            android:layout_margin="@dimen/dimen_16dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccPicker"
@@ -69,7 +72,7 @@
             android:layout_height="@dimen/dimen_56dp"
             android:layout_gravity="center"
             android:contentDescription="@string/sign_up_icon"
-            android:src="@drawable/ic_signup"
+            app:srcCompat="@drawable/ic_signup"
             android:layout_toEndOf="@id/llMobile"
             android:layout_marginTop="@dimen/dimen_16dp"
             android:minWidth="@dimen/dimen_56dp"/>
@@ -102,7 +105,7 @@
                 android:id="@+id/btnFacebook"
                 android:layout_width="@dimen/dimen_56dp"
                 android:layout_height="@dimen/dimen_56dp"
-                android:src="@drawable/ic_facebook"
+                app:srcCompat="@drawable/ic_facebook"
                 android:contentDescription="@string/facebook_icon" />
 
             <View
@@ -116,7 +119,7 @@
                 android:id="@+id/btnGoogle"
                 android:layout_width="@dimen/dimen_56dp"
                 android:layout_height="@dimen/dimen_56dp"
-                android:src="@drawable/ic_google_plus"
+                app:srcCompat="@drawable/ic_google_plus"
                 android:contentDescription="@string/google_plus_icon" />
         </LinearLayout>
     </RelativeLayout>
@@ -150,7 +153,7 @@
                 android:layout_height="@dimen/dimen_56dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/sign_up_icon"
-                android:src="@drawable/ic_signup" />
+                app:srcCompat="@drawable/ic_signup" />
         </LinearLayout>
         <TextView
             android:id="@+id/btnCodeResend"

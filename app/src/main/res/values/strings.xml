@@ -18,5 +18,16 @@
     <string name="instant_validation">Instant Validation</string>
     <string name="resend_code">Resend Code</string>
     <string name="logout">Logout</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="prefix">Prefix</string>
+    <string name="email">Email</string>
+    <string name="button_to_add_remove_number">Button to Add/Remove Number</string>
+    <string name="address">Address</string>
+    <string name="location_pickup">Location Pickup</string>
+    <string name="button_to_add_new_contact">Button to Add New Contact</string>
+    <string name="invalid_email_address">Invalid</string>
+    <string name="call_person">Call Person</string>
+    <string name="add_more_contact">Add More Contact</string>
 
 </resources>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ContactAddActivity"
+    android:background="@color/colorYellow">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_16dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etFirstName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/MyEditText"
+                android:hint="@string/first_name"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:inputType="textCapWords"
+                android:nextFocusDown="@id/etLastName"/>
+
+            <EditText
+                android:id="@+id/etLastName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/MyEditText"
+                android:hint="@string/last_name"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:inputType="textCapWords"
+                android:nextFocusDown="@id/etFirstMobileNumber"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_margin="@dimen/dimen_8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccPicker1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_contentColor="@android:color/white"
+                app:ccp_defaultNameCode="IN"
+                app:ccp_textGravity="CENTER"
+                app:ccp_showNameCode="false"
+                app:ccp_showFlag="false"
+                app:ccp_showFullName="false"
+                app:ccp_clickable="true"
+                app:ccp_showPhoneCode="true"
+                app:ccp_autoDetectCountry="true"
+                app:ccp_countryAutoDetectionPref="NETWORK_LOCALE_SIM"
+                app:ccp_autoDetectLanguage="true"
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/dimen_8dp"
+                android:paddingEnd="@dimen/dimen_8dp"
+                app:ccp_autoFormatNumber="true"/>
+
+            <EditText
+                android:id="@+id/etFirstMobileNumber"
+                android:inputType="phone"
+                android:digits="0123456789+"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/string_phone_number"
+                style="@style/MyEditText"
+                android:background="@android:color/transparent"
+                android:nextFocusDown="@id/etSecondMobileNumber"
+                android:nextFocusForward="@id/etSecondMobileNumber"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMobile2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_margin="@dimen/dimen_8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccPicker2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_contentColor="@android:color/white"
+                app:ccp_defaultNameCode="IN"
+                app:ccp_textGravity="CENTER"
+                app:ccp_showNameCode="false"
+                app:ccp_showFlag="false"
+                app:ccp_showFullName="false"
+                app:ccp_clickable="true"
+                app:ccp_showPhoneCode="true"
+                app:ccp_autoDetectCountry="true"
+                app:ccp_countryAutoDetectionPref="NETWORK_LOCALE_SIM"
+                app:ccp_autoDetectLanguage="true"
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/dimen_8dp"
+                android:paddingEnd="@dimen/dimen_8dp"
+                app:ccp_autoFormatNumber="true" />
+
+            <EditText
+                android:id="@+id/etSecondMobileNumber"
+                android:inputType="phone"
+                android:digits="0123456789+"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/string_phone_number"
+                style="@style/MyEditText"
+                android:background="@android:color/transparent"
+                android:nextFocusDown="@id/etEmailID"
+                android:nextFocusForward="@id/etEmailID"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etEmailID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/MyEditText"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:nextFocusDown="@id/etAddress"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_8dp">
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/MyEditText"
+                android:hint="@string/address"
+                android:lines="3"
+                android:maxLines="3"
+                android:inputType="textPostalAddress|textMultiLine"
+                android:gravity="start"/>
+            <ImageView
+                android:layout_width="@dimen/dimen_56dp"
+                android:layout_height="@dimen/dimen_56dp"
+                app:srcCompat="@drawable/ic_add_location_white_24dp"
+                android:layout_gravity="clip_horizontal"
+                android:contentDescription="@string/location_pickup"
+                android:onClick="getLocationFromMap"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/dimen_56dp"
+            android:layout_height="@dimen/dimen_56dp"
+            app:srcCompat="@drawable/ic_signup"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimen_16dp"
+            android:contentDescription="@string/button_to_add_new_contact"
+            android:onClick="addContact"/>
+
+    </LinearLayout>
+
+</ScrollView>
