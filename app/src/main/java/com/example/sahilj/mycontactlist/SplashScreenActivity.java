@@ -24,7 +24,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             final boolean isLogin = MyUtilities.isUserLogin();
             //FadeOut Animation
             Animation startFadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out_animation);
-
+            startFadeOutAnimation.setRepeatCount(1);
             startFadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {

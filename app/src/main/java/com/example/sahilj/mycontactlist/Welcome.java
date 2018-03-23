@@ -174,8 +174,10 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
 
     @Override
     public void onContactSelected(DocumentSnapshot person) {
-        Person p = person.toObject(Person.class);
-        Toast.makeText(this, "Start View Contact Activity " + p.getFullName(), Toast.LENGTH_SHORT).show();
+        MyUtilities.person = person.toObject(Person.class);
+        //Toast.makeText(this, "Start View Contact Activity " + p.getFullName(), Toast.LENGTH_SHORT).show();
+        Intent displayContactActivity = new Intent(this,DisplayContactActivity.class);
+        startActivity(displayContactActivity);
     }
 
     public void startAddContactActivity(View view) {

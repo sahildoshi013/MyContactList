@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import com.example.sahilj.mycontactlist.model.Person;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,7 +24,9 @@ public class MyUtilities {
     public static final String DB_EMAIL_ID = "emailID";
     public static final String DB_ADDRESS = "address";
     public static final String DB_LOCATION = "location";
+    public static final String PERSON = "person";
     private static String user;
+    public static Person person;
 
     //check Login Status of using Firebase
     public static boolean isUserLogin() {

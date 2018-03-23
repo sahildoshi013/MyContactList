@@ -1,8 +1,14 @@
 package com.example.sahilj.mycontactlist.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +64,7 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
         holder.bind(getSnapshot(position), mListener);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
 
         private final TextView tvDisplayLetter;
@@ -79,7 +85,7 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
         }
 
         void bind(final DocumentSnapshot snapshot, final OnContactSelectedListener mListener) {
-            Person personDetail = snapshot.toObject(Person.class);
+            final Person personDetail = snapshot.toObject(Person.class);
         //    Resources resources = itemView.getResources();
 
             String firstChar;
@@ -93,6 +99,28 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
             tvFullName.setText(personDetail.getFullName());
             tvContactNumber.setText(personDetail.getContactNumber());
 
+            if(personDetail.getContactNumber()==null)
+            {
+                btnCall.setVisibility(View.GONE);
+                btnMessage.setVisibility(View.GONE);
+            }else{
+                btnCall.setVisibility(View.VISIBLE);
+                btnMessage.setVisibility(View.VISIBLE);
+
+                btnCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",personDetail.getContactNumber() , null));
+                        view.getContext().startActivity(intent);
+                    }
+                });
+                btnMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sendSMS(view,personDetail.getContactNumber());
+                    }
+                });
+            }
             // Click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,20 +130,30 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
                     }
                 }
             });
-
-            btnCall.setOnClickListener(this);
-            btnMessage.setOnClickListener(this);
         }
+        private void sendSMS(View mContext, String contactNumber) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // At least KitKat
+            {
+                String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(mContext.getContext()); // Need to change the build to API 19
 
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.btnCall:
-                    Toast.makeText(itemView.getContext(), "Call " + this.getPosition(), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btnMessage:
-                    Toast.makeText(itemView.getContext(), "Message " + this.getPosition(), Toast.LENGTH_SHORT).show();
-                    break;
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+
+                if (defaultSmsPackageName != null)// Can be null in case that there is no default, then the user would be able to choose
+                // any app that support this intent.
+                {
+                    sendIntent.setPackage(defaultSmsPackageName);
+                }
+                sendIntent.putExtra("address",contactNumber);
+                mContext.getContext().startActivity(sendIntent);
+
+            }
+            else // For early versions, do what worked for you before.
+            {
+                Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
+                smsIntent.setType("vnd.android-dir/mms-sms");
+                smsIntent.putExtra("address",contactNumber);
+                mContext.getContext().startActivity(smsIntent);
             }
         }
     }

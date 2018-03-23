@@ -36,6 +36,7 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hbb20.CountryCodePicker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,7 +125,12 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
         Map<String, Object> docData = new HashMap<>();
         docData.put(MyUtilities.DB_FIRST_NAME, etFirstName.getText().toString());
         docData.put(MyUtilities.DB_LAST_NAME, etLastName.getText().toString());
-        docData.put(MyUtilities.DB_MOBILE_NUMBERS, Arrays.asList(ccpFirstNumber.getFullNumberWithPlus(),ccpSecondNumber.getFullNumberWithPlus()));
+        ArrayList<String> numbers = new ArrayList<>(2);
+        if(ccpFirstNumber.isValidFullNumber())
+            numbers.add(ccpFirstNumber.getFullNumberWithPlus());
+        if(ccpSecondNumber.isValidFullNumber())
+            numbers.add(ccpSecondNumber.getFullNumberWithPlus());
+        docData.put(MyUtilities.DB_MOBILE_NUMBERS, numbers);
         docData.put(MyUtilities.DB_EMAIL_ID, etEmail.getText().toString());
         docData.put(MyUtilities.DB_ADDRESS, etAddress.getText().toString());
         docData.put(MyUtilities.DB_LOCATION,geoPoint);

@@ -5,13 +5,14 @@ import android.util.Patterns;
 import com.google.firebase.firestore.GeoPoint;
 import com.hbb20.CountryCodePicker;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Sahil J on 3/22/2018.
  */
 
-public class Person {
+public class Person implements Serializable {
 
     private String firstName;
     private String lastName;
