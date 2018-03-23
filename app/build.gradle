@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.sahilj.mycontactlist"
         minSdkVersion 19
@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
+        //vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
     buildTypes {
@@ -21,46 +21,36 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.firebase:firebase-auth:11.8.0'
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.android.support:animated-vector-drawable:27.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:cardview-v7:27.0.2'
     //Contry Codes
     implementation 'com.hbb20:ccp:2.1.4'
-
     //Firebase Auth
     compile 'com.firebaseui:firebase-ui-auth:3.2.2'
-
     // Required only if Facebook login support is required
-    compile('com.facebook.android:facebook-android-sdk:4.27.0')
-
+    compile 'com.facebook.android:facebook-android-sdk:4.27.0'
     //Firebase Firestore Database
     compile 'com.google.firebase:firebase-firestore:11.8.0'
-
     //Recycler View with popup
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.17'
-
     //Circle Imageview
     compile 'com.mikhaellopez:circularimageview:3.0.2'
-
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.6.1'
-
     //Card view
     compile 'com.android.support:cardview-v7:26.1.0'
-
     //location of Place from google
     compile 'com.google.android.gms:play-services:11.8.0'
     compile 'com.google.android.gms:play-services-places:11.8.0'
-
 }
 
 

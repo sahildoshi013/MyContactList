@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.sahilj.mycontactlist.Utils.MyUtilities;
+import com.example.sahilj.mycontactlist.model.Person;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -30,7 +31,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -61,6 +65,8 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
     private View view;
     private GeoPoint geoPoint;
     private ImageView btnAddContact;
+    private boolean isEditingMode;
+    private String docId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,11 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
         ccpFirstNumber.setNumberAutoFormattingEnabled(true);
         ccpSecondNumber.setNumberAutoFormattingEnabled(true);
 
+        if(getIntent().getBooleanExtra(MyUtilities.IS_EDIT_MODE,false)){
+            isEditingMode = true;
+            setDefaultData();
+        }
+
 
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
@@ -98,6 +109,25 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
+    }
+
+    private void setDefaultData() {
+
+        DocumentSnapshot data = MyUtilities.personData;
+        Person person = data.toObject(Person.class);
+
+        docId = data.getId();
+
+        etFirstName.setText(person.getFirstName());
+        etLastName.setText(person.getLastName());
+        List<String> numbers = person.getMobileNumber();
+        if(numbers.size()>=1)
+            ccpFirstNumber.setFullNumber(numbers.get(0));
+        if(numbers.size()==2)
+            ccpSecondNumber.setFullNumber(numbers.get(1));
+        etEmail.setText(person.getEmailID());
+        etAddress.setText(person.getAddress());
+
     }
 
     @Override
@@ -122,36 +152,56 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
 
     //Add contact to firebase
     private void addContactToFireBase() {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put(MyUtilities.DB_FIRST_NAME, etFirstName.getText().toString());
-        docData.put(MyUtilities.DB_LAST_NAME, etLastName.getText().toString());
-        ArrayList<String> numbers = new ArrayList<>(2);
+        String collectionID = MyUtilities.getUser();
+
+        String firstName = etFirstName.getText().toString();
+        String lastName = etLastName.getText().toString();
+        List<String> numbers = new ArrayList<>(2);
         if(ccpFirstNumber.isValidFullNumber())
             numbers.add(ccpFirstNumber.getFullNumberWithPlus());
         if(ccpSecondNumber.isValidFullNumber())
             numbers.add(ccpSecondNumber.getFullNumberWithPlus());
-        docData.put(MyUtilities.DB_MOBILE_NUMBERS, numbers);
-        docData.put(MyUtilities.DB_EMAIL_ID, etEmail.getText().toString());
-        docData.put(MyUtilities.DB_ADDRESS, etAddress.getText().toString());
-        docData.put(MyUtilities.DB_LOCATION,geoPoint);
+        String email = etEmail.getText().toString();
+        String address = etAddress.getText().toString();
 
-        String collectionID = MyUtilities.getUser();
+        Person p = new Person(firstName,lastName,numbers,email,address,geoPoint);
+
+        MyUtilities.person = p;
 
         Log.v(TAG,collectionID);
         if (collectionID != null) {
-            db.collection(collectionID).add(docData).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentReference> task) {
-                     if(task.isSuccessful()){
-                         Toast.makeText(ContactAddActivity.this, "New Contact Added", Toast.LENGTH_SHORT).show();
-                         finish();
-                     }else{
-                         Log.v(TAG,task.getException().getMessage());
-                         Toast.makeText(ContactAddActivity.this, "Oops!", Toast.LENGTH_SHORT).show();
-                     }
-                     btnAddContact.setVisibility(View.VISIBLE);
-                }
-            });
+            CollectionReference dbRef = db.collection(collectionID);
+            if(isEditingMode) {
+                dbRef.document(docId).set(p).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(ContactAddActivity.this, "Contact Updated", Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_OK);
+                            finish();
+                        }else{
+                            Log.v(TAG,task.getException().getMessage());
+                            Toast.makeText(ContactAddActivity.this, "Oops!", Toast.LENGTH_SHORT).show();
+                        }
+                        btnAddContact.setVisibility(View.VISIBLE);
+                    }
+                });
+            }else{
+
+                dbRef.add(p).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                         if(task.isSuccessful()){
+                             Toast.makeText(ContactAddActivity.this, "New Contact Added", Toast.LENGTH_SHORT).show();
+                             finish();
+                         }else{
+                             Log.v(TAG,task.getException().getMessage());
+                             Toast.makeText(ContactAddActivity.this, "Oops!", Toast.LENGTH_SHORT).show();
+                         }
+                         btnAddContact.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
         }else{
             Toast.makeText(this, "Oops!", Toast.LENGTH_SHORT).show();
         }

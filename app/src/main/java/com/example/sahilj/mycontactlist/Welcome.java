@@ -1,6 +1,7 @@
 package com.example.sahilj.mycontactlist;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import java.io.Serializable;
+
 public class Welcome extends AppCompatActivity implements View.OnClickListener,MyAdapter.OnContactSelectedListener {
 
     private static final String TAG = "Welcome Activity";
@@ -50,12 +53,6 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
         // Initialize Firestore and the main RecyclerView
         initFirestore();
         initRecyclerView();
-
-        //Get Contact Details
-        getContactData();
-    }
-
-    private void getContactData() {
 
     }
 
@@ -136,6 +133,15 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdapter != null) {
+            mAdapter.startListening();
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     private boolean shouldStartSignIn() {
         return (FirebaseAuth.getInstance().getCurrentUser() == null);
     }
@@ -174,14 +180,16 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
 
     @Override
     public void onContactSelected(DocumentSnapshot person) {
-        MyUtilities.person = person.toObject(Person.class);
+        MyUtilities.personData = person;
         //Toast.makeText(this, "Start View Contact Activity " + p.getFullName(), Toast.LENGTH_SHORT).show();
         Intent displayContactActivity = new Intent(this,DisplayContactActivity.class);
+//        displayContactActivity.putExtra(MyUtilities.PERSON, (Serializable) person);
         startActivity(displayContactActivity);
     }
 
     public void startAddContactActivity(View view) {
         Intent addContactActivity = new Intent(this,ContactAddActivity.class);
+        addContactActivity.putExtra(MyUtilities.IS_EDIT_MODE,false);
         startActivity(addContactActivity);
     }
 }

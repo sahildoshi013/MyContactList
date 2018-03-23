@@ -10,7 +10,7 @@
     android:background="@color/colorYellow">
 
     <ImageView
-        android:id="@+id/imgWelcomeComapanyLogo"
+        android:id="@+id/imgWelcomeCompanyLogo"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:src="@drawable/company_logo"

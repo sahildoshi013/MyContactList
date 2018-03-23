@@ -21,6 +21,19 @@ public class Person implements Serializable {
     private String address;
     private GeoPoint location;
 
+    public Person(){
+
+    }
+
+    public Person(String firstName, String lastName, List<String> mobileNumber, String emailID, String address, GeoPoint location) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mobileNumber = mobileNumber;
+        this.emailID = emailID;
+        this.address = address;
+        this.location = location;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -69,25 +82,4 @@ public class Person implements Serializable {
         this.location = location;
     }
 
-    public String getFullName() {
-        String name = "";
-
-        name = this.firstName;
-
-        if(!name.isEmpty())
-            name += " ";
-
-        name+=this.lastName;
-        return name;
-    }
-
-    public String getContactNumber() {
-        if(Patterns.PHONE.matcher(this.mobileNumber.get(0)).matches())
-            return this.mobileNumber.get(0);
-
-        if(Patterns.PHONE.matcher(this.mobileNumber.get(1)).matches())
-            return this.mobileNumber.get(1);
-
-        return null;
-    }
 }

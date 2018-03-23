@@ -1,22 +1,19 @@
 package com.example.sahilj.mycontactlist.Adapters;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sahilj.mycontactlist.R;
+import com.example.sahilj.mycontactlist.Utils.MyUtilities;
 import com.example.sahilj.mycontactlist.model.Person;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -34,10 +31,7 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
         Person personDetail = getSnapshot(position).toObject(Person.class);
         //    Resources resources = itemView.getResources();
 
-        if(personDetail.getFirstName()!=null && !personDetail.getFullName().isEmpty()){
-            return personDetail.getFullName().charAt(0)+"";
-        }else
-            return "#";
+        return MyUtilities.getFirstCharacter(personDetail.getFirstName(),personDetail.getLastName());
     }
 
     public interface OnContactSelectedListener {
@@ -88,18 +82,12 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
             final Person personDetail = snapshot.toObject(Person.class);
         //    Resources resources = itemView.getResources();
 
-            String firstChar;
-            if(personDetail.getFirstName()!=null && !personDetail.getFullName().isEmpty()){
-                firstChar = personDetail.getFullName().charAt(0)+"";
-            }else
-                firstChar = "#";
+            tvDisplayLetter.setText(MyUtilities.getFirstCharacter(personDetail.getFirstName(),personDetail.getLastName()));
 
-            tvDisplayLetter.setText(firstChar);
+            tvFullName.setText(MyUtilities.getFullName(personDetail.getFirstName(),personDetail.getLastName()));
+            tvContactNumber.setText(MyUtilities.getContactNumber(personDetail.getMobileNumber()));
 
-            tvFullName.setText(personDetail.getFullName());
-            tvContactNumber.setText(personDetail.getContactNumber());
-
-            if(personDetail.getContactNumber()==null)
+            if(MyUtilities.getContactNumber(personDetail.getMobileNumber())==null)
             {
                 btnCall.setVisibility(View.GONE);
                 btnMessage.setVisibility(View.GONE);
@@ -110,14 +98,14 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
                 btnCall.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",personDetail.getContactNumber() , null));
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",MyUtilities.getContactNumber(personDetail.getMobileNumber()) , null));
                         view.getContext().startActivity(intent);
                     }
                 });
                 btnMessage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        sendSMS(view,personDetail.getContactNumber());
+                        sendSMS(view,MyUtilities.getContactNumber(personDetail.getMobileNumber()));
                     }
                 });
             }

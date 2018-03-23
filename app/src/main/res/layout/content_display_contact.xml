@@ -59,7 +59,6 @@
             android:drawableStart="@drawable/ic_location_on_yellow_24dp"
             android:padding="@dimen/dimen_16dp"
             android:background="@android:drawable/status_bar_item_app_background"
-            android:onClick="openMapActivity"
             android:visibility="gone"/>
 
     </LinearLayout>

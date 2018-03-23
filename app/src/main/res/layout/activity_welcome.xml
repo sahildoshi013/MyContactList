@@ -10,19 +10,23 @@
     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:fastScrollPopupBgColor="@color/colorAccent"
+        android:layout_height="wrap_content"
+        app:fastScrollPopupBgColor="@color/colorPrimary"
         app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-        app:fastScrollThumbColor="@color/colorAccent" />
+        app:fastScrollThumbColor="@color/colorYellow">
+
+    </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
+
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_56dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/recycler"
         android:padding="@dimen/dimen_16dp"
         android:text="@string/add_more_contact"
         android:onClick="startAddContactActivity"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddContact"
         android:layout_width="wrap_content"
@@ -31,7 +35,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_add_white_24dp"
+        android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@color/colorYellow"/>
 
 </RelativeLayout>
