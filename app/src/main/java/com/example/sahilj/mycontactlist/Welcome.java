@@ -1,8 +1,6 @@
 package com.example.sahilj.mycontactlist;
 
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,18 +14,12 @@ import android.widget.Toast;
 
 import com.example.sahilj.mycontactlist.Adapters.MyAdapter;
 import com.example.sahilj.mycontactlist.Utils.MyUtilities;
-import com.example.sahilj.mycontactlist.model.Person;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.io.Serializable;
 
 public class Welcome extends AppCompatActivity implements View.OnClickListener,MyAdapter.OnContactSelectedListener {
 
@@ -37,7 +29,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
     private FirebaseFirestore mFirestore;
     private Query mQuery;
     private MyAdapter mAdapter;
-    private FastScrollRecyclerView mRestaurantsRecycler;
+    private FastScrollRecyclerView mContactRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +38,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
 
 
         fabAdd = findViewById(R.id.fabAddContact);
-        mRestaurantsRecycler = findViewById(R.id.recycler);
+        mContactRecycler = findViewById(R.id.recycler);
 
         fabAdd.setOnClickListener(this);
 
@@ -84,9 +76,9 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
             protected void onDataChanged() {
                 // Show/hide content if the query returns empty.
                 if (getItemCount() == 0) {
-                    mRestaurantsRecycler.setVisibility(View.GONE);
+                    mContactRecycler.setVisibility(View.GONE);
                 } else {
-                    mRestaurantsRecycler.setVisibility(View.VISIBLE);
+                    mContactRecycler.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -98,8 +90,8 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
             }
         };
 
-        mRestaurantsRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mRestaurantsRecycler.setAdapter(mAdapter);
+        mContactRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mContactRecycler.setAdapter(mAdapter);
     }
 
 
@@ -164,6 +156,9 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
                 Toast.makeText(this, "Logout Successfully!", Toast.LENGTH_SHORT).show();
                 startSignIn();
                 break;
+            case R.id.menuShowMap:
+                Intent mapActivity = new Intent(this,ContactsOnMapActivity.class);
+                startActivity(mapActivity);
         }
         return super.onOptionsItemSelected(item);
     }
