@@ -89,12 +89,10 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
         ccpFirstNumber.registerCarrierNumberEditText(etFirstNumber);
         ccpSecondNumber.registerCarrierNumberEditText(etSecondNuumber);
 
-        ccpFirstNumber.setNumberAutoFormattingEnabled(true);
-        ccpSecondNumber.setNumberAutoFormattingEnabled(true);
 
         if(getIntent().getBooleanExtra(MyUtilities.IS_EDIT_MODE,false)){
             isEditingMode = true;
-            setDefaultData();
+            setDefaultData(); // Set previous data of contact
         }
 
 
@@ -111,8 +109,9 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
                 .build();
     }
 
-    private void setDefaultData() {
 
+    //Set Detail of contact if it is in edit mode
+    private void setDefaultData() {
         DocumentSnapshot data = MyUtilities.personData;
         Person person = data.toObject(Person.class);
 
@@ -144,7 +143,7 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
 
 
     public void addContact(View view) {
-        if(validData()){
+        if(validData()){ //Add contact if it's valid
             btnAddContact.setVisibility(View.GONE);
             addContactToFireBase();
         }
@@ -171,7 +170,7 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
         Log.v(TAG,collectionID);
         if (collectionID != null) {
             CollectionReference dbRef = db.collection(collectionID);
-            if(isEditingMode) {
+            if(isEditingMode) { //if it's in edit mode update contact details
                 dbRef.document(docId).set(p).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -186,8 +185,7 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
                         btnAddContact.setVisibility(View.VISIBLE);
                     }
                 });
-            }else{
-
+            }else{ //Add new contact to firestore
                 dbRef.add(p).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -207,39 +205,39 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    //Validate data
     private boolean validData() {
         if(etFirstName.getText().toString().isEmpty() &&
                 etLastName.getText().toString().isEmpty() &&
                 etFirstNumber.getText().toString().isEmpty() &&
                 etEmail.getText().toString().isEmpty() &&
-                etAddress.getText().toString().isEmpty()){
+                etAddress.getText().toString().isEmpty()){ //Check for any details
             Toast.makeText(this, "Add Some Details", Toast.LENGTH_SHORT).show();
             return false;
-        }else if(!etFirstNumber.getText().toString().isEmpty() && !ccpFirstNumber.isValidFullNumber()){
+        }else if(!etFirstNumber.getText().toString().isEmpty() && !ccpFirstNumber.isValidFullNumber()){ //check number is correct iff added
             etFirstNumber.setError(getResources().getString(R.string.invalid_phone_number));
             return false;
         }
-        else if(!etSecondNuumber.getText().toString().isEmpty() && !ccpSecondNumber.isValidFullNumber()){
+        else if(!etSecondNuumber.getText().toString().isEmpty() && !ccpSecondNumber.isValidFullNumber()){//check number is correct iff added
             etSecondNuumber.setError(getResources().getString(R.string.invalid_phone_number));
             return false;
-        }else if(!etEmail.getText().toString().isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()){
+        }else if(!etEmail.getText().toString().isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()){//check mail is correct iff added
             etEmail.setError(getResources().getString(R.string.invalid_email_address));
             return false;
         }
         return true;
     }
 
+    //Open map for pick location
     public void getLocationFromMap(View view) {
         getCurrentPlaceItems();
     }
 
-
-
     private void getCurrentPlaceItems() {
-        if (isLocationAccessPermitted()) {
-            showPlacePicker();
+        if (isLocationAccessPermitted()) {//check for permission
+            showPlacePicker(); //open map iff permission granted
         } else {
-            requestLocationAccessPermission();
+            requestLocationAccessPermission(); //request for permission
         }
     }
 
@@ -248,6 +246,7 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    //request permission
     private void requestLocationAccessPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -259,20 +258,26 @@ public class ContactAddActivity extends AppCompatActivity implements GoogleApiCl
         if (requestCode == LOC_REQ_CODE) {
             if (resultCode == RESULT_OK) {
                 showPlacePicker();
+            }else{
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
             }
         }else if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
                 String address = place.getName() + "\n" + place.getAddress();
-                etAddress.setText(address);
+                etAddress.setText(address); //set selected address to edittext
                 LatLng latLong = place.getLatLng();
-                geoPoint = new GeoPoint(latLong.latitude,latLong.longitude);
+                geoPoint = new GeoPoint(latLong.latitude,latLong.longitude); //save latlong of place
+            }else{
+                Toast.makeText(this, "Oops!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @SuppressLint("MissingPermission")
     private void showPlacePicker() {
+
+        //Open Map Picker activity
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {

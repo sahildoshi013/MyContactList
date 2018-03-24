@@ -41,22 +41,25 @@ public class ContactsOnMapActivity extends AppCompatActivity implements OnMapRea
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        //initialise Firebase database
         db = FirebaseFirestore.getInstance();
 
+        //getData of All contact from firebase
         getData();
 
     }
 
+
     private void getData() {
         String colID = MyUtilities.getUser();
         if (colID != null) {
+            //request for user all contacts
             db.collection(colID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if(task.isSuccessful()){
                         data = task.getResult();
-                        addMarkers();
+                        addMarkers(); // add marker on map iff contact successfully received
                     }else {
                         Toast.makeText(ContactsOnMapActivity.this, "Oops!", Toast.LENGTH_SHORT).show();
                     }
@@ -65,6 +68,7 @@ public class ContactsOnMapActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    //Add markers on map
     private void addMarkers() {
         if(mMap!=null && data!=null){
             List<DocumentSnapshot> documents = data.getDocuments();
@@ -73,16 +77,20 @@ public class ContactsOnMapActivity extends AppCompatActivity implements OnMapRea
 
                 if(person.getLocation()!=null) {
                     LatLng location = new LatLng(person.getLocation().getLatitude(), person.getLocation().getLongitude());
+
+                    //add individual marker on map with title and address
                     mMap.addMarker(new MarkerOptions().position(location)
                             .title(MyUtilities.getFullName(person.getFirstName(),person.getLastName()))
                             .snippet(person.getAddress()));
                 }
             }
 
+            //set camera position on gujarat
             CameraPosition gujarat =
                     new CameraPosition.Builder().target(new LatLng(22.2587, 71.1924))
                             .zoom(7.0f)
                             .build();
+
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(gujarat));
         }
     }
@@ -101,6 +109,7 @@ public class ContactsOnMapActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        //change the marker view
         mMap.setInfoWindowAdapter(this);
         // Add a marker in Sydney and move the camera
         addMarkers();
@@ -108,19 +117,19 @@ public class ContactsOnMapActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public View getInfoWindow(Marker marker) {
-
-        View mMarkerView = getLayoutInflater().inflate(R.layout.item_marker,null);
-        TextView tvTitle = mMarkerView.findViewById(R.id.tvMarkerTitle);
-        TextView tvSnippet = mMarkerView.findViewById(R.id.tvMarketSnippet);
-
-        tvTitle.setText(marker.getTitle());
-        tvSnippet.setText(marker.getSnippet());
-
-        return mMarkerView;
+        //add custom view on click of marker
+        return setMarkerView(marker);
     }
 
     @Override
     public View getInfoContents(Marker marker) {
+        //add custom view on click of marker
+        return setMarkerView(marker);
+    }
+
+
+    private View setMarkerView(Marker marker) {
+
         View mMarkerView = getLayoutInflater().inflate(R.layout.item_marker,null);
         TextView tvTitle = mMarkerView.findViewById(R.id.tvMarkerTitle);
         TextView tvSnippet = mMarkerView.findViewById(R.id.tvMarketSnippet);
@@ -130,4 +139,5 @@ public class ContactsOnMapActivity extends AppCompatActivity implements OnMapRea
 
         return mMarkerView;
     }
+
 }

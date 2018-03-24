@@ -25,42 +25,40 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter{
 
-    @NonNull
-    @Override
-    public String getSectionName(int position) {
-        Person personDetail = getSnapshot(position).toObject(Person.class);
-        //    Resources resources = itemView.getResources();
-
-        return MyUtilities.getFirstCharacter(personDetail.getFirstName(),personDetail.getLastName());
-    }
-
+    //Interface to handle click event of any item of recyclerView
     public interface OnContactSelectedListener {
-
         void onContactSelected(DocumentSnapshot person);
-
     }
 
     private OnContactSelectedListener mListener;
 
-    public MyAdapter(Query query, OnContactSelectedListener listener) {
+    protected MyAdapter(Query query, OnContactSelectedListener listener) {
         super(query);
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new ViewHolder(inflater.inflate(R.layout.item_contact, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(getSnapshot(position), mListener);
     }
 
+
+    // Use to set First letter to popup of scrollbar
+    @NonNull
+    @Override
+    public String getSectionName(int position) {
+        Person personDetail = getSnapshot(position).toObject(Person.class);
+        return MyUtilities.getFirstCharacter(personDetail.getFirstName(),personDetail.getLastName());
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
-
-
         private final TextView tvDisplayLetter;
         private final TextView tvFullName;
         private final TextView tvContactNumber;
@@ -74,20 +72,18 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
             tvContactNumber = inflate.findViewById(R.id.tvNumber);
             btnMessage = inflate.findViewById(R.id.btnMessage);
             btnCall = inflate.findViewById(R.id.btnCall);
-
-
         }
 
+        //Set data of snapshot to view
         void bind(final DocumentSnapshot snapshot, final OnContactSelectedListener mListener) {
+
             final Person personDetail = snapshot.toObject(Person.class);
-        //    Resources resources = itemView.getResources();
 
             tvDisplayLetter.setText(MyUtilities.getFirstCharacter(personDetail.getFirstName(),personDetail.getLastName()));
-
             tvFullName.setText(MyUtilities.getFullName(personDetail.getFirstName(),personDetail.getLastName()));
             tvContactNumber.setText(MyUtilities.getContactNumber(personDetail.getMobileNumber()));
 
-            if(MyUtilities.getContactNumber(personDetail.getMobileNumber())==null)
+            if(MyUtilities.getContactNumber(personDetail.getMobileNumber())==null)//Hide Button if No number Available
             {
                 btnCall.setVisibility(View.GONE);
                 btnMessage.setVisibility(View.GONE);
@@ -95,6 +91,7 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
                 btnCall.setVisibility(View.VISIBLE);
                 btnMessage.setVisibility(View.VISIBLE);
 
+                //Open Contact dialer with persons first available number
                 btnCall.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -109,7 +106,8 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
                     }
                 });
             }
-            // Click listener
+
+            // View Click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,6 +117,8 @@ public class MyAdapter extends FirestoreAdapter<MyAdapter.ViewHolder> implements
                 }
             });
         }
+
+        //Open SMS app for particular contact
         private void sendSMS(View mContext, String contactNumber) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // At least KitKat
             {

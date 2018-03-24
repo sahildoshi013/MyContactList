@@ -30,7 +30,6 @@ import java.util.List;
 
 public class DisplayContactActivity extends AppCompatActivity {
 
-    private static final int RC_EDIT_CONTACT = 1;
     private TextView tvFirstNumber;
     private TextView tvSecondNumber;
     private TextView tvEmailID;
@@ -43,31 +42,32 @@ public class DisplayContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_contact);
 
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); //set Home button in action bar
         }
 
         toolbarLayout = findViewById(R.id.toolbar_layout);
-
         tvFirstNumber = findViewById(R.id.tvFirstNumber);
         tvSecondNumber = findViewById(R.id.tvSecondNumber);
         tvEmailID = findViewById(R.id.tvEmailID);
         tvAddress = findViewById(R.id.tvAddress);
 
+        //Get details about the contact to be display
         Person person = MyUtilities.personData.toObject(Person.class);
+        //display person data
         setData(person);
 
         //initialise database
         db = FirebaseFirestore.getInstance();
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //add menu option
         getMenuInflater().inflate(R.menu.menu_display_contact,menu);
         return true;
     }
@@ -76,12 +76,13 @@ public class DisplayContactActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_delete:
-                deleteContact();
+                deleteContact(); //delete particular contact
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    //Delete Contact
     private void deleteContact() {
         AlertDialog.Builder alert = new AlertDialog.Builder(DisplayContactActivity.this);
         alert.setTitle("Delete");
@@ -92,12 +93,13 @@ public class DisplayContactActivity extends AppCompatActivity {
                 String docId = MyUtilities.personData.getId();
                 String colID = MyUtilities.getUser();
                 if (colID != null) {
+                    //request to delete contact
                     db.collection(colID).document(docId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(DisplayContactActivity.this, "Deleted!", Toast.LENGTH_SHORT).show();
-                                finish();
+                                finish(); // close current activity on finish deleting.
                             }else{
                                 Toast.makeText(DisplayContactActivity.this, "Oops!", Toast.LENGTH_SHORT).show();
                             }
@@ -115,7 +117,7 @@ public class DisplayContactActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
+        //show conformation box before delete
         alert.show();
     }
 
@@ -126,9 +128,11 @@ public class DisplayContactActivity extends AppCompatActivity {
         setData(person);
     }
 
+    //Set person data into views
     private void setData(Person person) {
         if(person !=null) {
 
+            //get all data in variables
             final String name = MyUtilities.getFullName(person.getFirstName(),person.getLastName());
             List<String> numbers = person.getMobileNumber();
             String email = person.getEmailID();
@@ -141,12 +145,14 @@ public class DisplayContactActivity extends AppCompatActivity {
                 toolbarLayout.setTitle("(No Name)");
 
             if (numbers.size() == 1) {
-                tvFirstNumber.setText(numbers.get(0));
-                tvFirstNumber.setVisibility(View.VISIBLE);
+                String number1 = numbers.get(0);
+                if(Patterns.PHONE.matcher(number1).matches()) {
+                    tvFirstNumber.setText(numbers.get(0));
+                    tvFirstNumber.setVisibility(View.VISIBLE);
+                }
             }
 
             if(numbers.size() == 2){
-
                 String number1 = numbers.get(0);
                 String number2 = numbers.get(1);
                 if(Patterns.PHONE.matcher(number1).matches()) {
@@ -158,6 +164,7 @@ public class DisplayContactActivity extends AppCompatActivity {
                     tvSecondNumber.setVisibility(View.VISIBLE);
                 }
             }
+
             if(email!=null && !email.isEmpty()){
                 tvEmailID.setText(email);
                 tvEmailID.setVisibility(View.VISIBLE);
@@ -167,7 +174,7 @@ public class DisplayContactActivity extends AppCompatActivity {
                 tvAddress.setVisibility(View.VISIBLE);
             }
             if(geopoint!=null){
-             //   tvAddress.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_location_on_yellow_24dp),null,getResources().getDrawable(R.drawable.ic_map_yellow_24dp),null);
+                //Open map activity
                 tvAddress.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -185,6 +192,7 @@ public class DisplayContactActivity extends AppCompatActivity {
         }
     }
 
+    //open Edit Contact activity
     public void openEditContactActivity(View view) {
         Intent editContact = new Intent(this,ContactAddActivity.class);
         editContact.putExtra(MyUtilities.IS_EDIT_MODE,true);

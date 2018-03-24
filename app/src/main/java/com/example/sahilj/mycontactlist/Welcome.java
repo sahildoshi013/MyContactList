@@ -25,8 +25,6 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
 
     private static final String TAG = "Welcome Activity";
     private static final int LIMIT = 250;
-    private FloatingActionButton fabAdd;
-    private FirebaseFirestore mFirestore;
     private Query mQuery;
     private MyAdapter mAdapter;
     private FastScrollRecyclerView mContactRecycler;
@@ -37,7 +35,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
         setContentView(R.layout.activity_welcome);
 
 
-        fabAdd = findViewById(R.id.fabAddContact);
+        FloatingActionButton fabAdd = findViewById(R.id.fabAddContact);
         mContactRecycler = findViewById(R.id.recycler);
 
         fabAdd.setOnClickListener(this);
@@ -49,16 +47,14 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
     }
 
     private void initFirestore() {
-        // TODO(developer): Implement
-        mFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
 
         String collectionID = MyUtilities.getUser();
 
-        // Get the 50 highest rated restaurants
         if (collectionID != null) {
             mQuery = mFirestore.collection(collectionID)
-                    .orderBy(MyUtilities.DB_FIRST_NAME)
-                    .limit(LIMIT);
+                    .orderBy(MyUtilities.DB_FIRST_NAME);
+
         }else {
             Toast.makeText(this, "Add Contact!", Toast.LENGTH_SHORT).show();
         }
@@ -66,10 +62,12 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
     }
 
     private void initRecyclerView() {
+
         if (mQuery == null) {
             Log.w(TAG, "No query, not initializing RecyclerView");
         }
 
+        //initialize adapter with listener
         mAdapter = new MyAdapter(mQuery, this) {
 
             @Override
@@ -81,17 +79,10 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
                     mContactRecycler.setVisibility(View.VISIBLE);
                 }
             }
-
-            @Override
-            protected void onError(FirebaseFirestoreException e) {
-                // Show a snackbar on errors
-                Snackbar.make(findViewById(android.R.id.content),
-                        "Error: check logs for info.", Snackbar.LENGTH_LONG).show();
-            }
         };
 
         mContactRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mContactRecycler.setAdapter(mAdapter);
+        mContactRecycler.setAdapter(mAdapter); // set adapter to recycler view
     }
 
 
@@ -111,6 +102,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
         }
     }
 
+    //Start login activity
     private void startSignIn() {
         Intent intent = new Intent(this,SplashScreenActivity.class);
         startActivity(intent);
@@ -134,13 +126,13 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
         }
     }
 
+    //check user is login or not
     private boolean shouldStartSignIn() {
         return (FirebaseAuth.getInstance().getCurrentUser() == null);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         //Add Option menu in Toolbar
         getMenuInflater().inflate(R.menu.option_menu, menu);
         return true;
@@ -157,8 +149,10 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
                 startSignIn();
                 break;
             case R.id.menuShowMap:
+                //Show map activity with contact markers
                 Intent mapActivity = new Intent(this,ContactsOnMapActivity.class);
                 startActivity(mapActivity);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -167,6 +161,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.fabAddContact:
+                //start add contact activity
                 startAddContactActivity(view);
                 break;
         }
@@ -175,14 +170,14 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener,M
 
     @Override
     public void onContactSelected(DocumentSnapshot person) {
+        //on select particular contact open contact details activity
         MyUtilities.personData = person;
-        //Toast.makeText(this, "Start View Contact Activity " + p.getFullName(), Toast.LENGTH_SHORT).show();
         Intent displayContactActivity = new Intent(this,DisplayContactActivity.class);
-//        displayContactActivity.putExtra(MyUtilities.PERSON, (Serializable) person);
         startActivity(displayContactActivity);
     }
 
     public void startAddContactActivity(View view) {
+        //start activity to add new Contact
         Intent addContactActivity = new Intent(this,ContactAddActivity.class);
         addContactActivity.putExtra(MyUtilities.IS_EDIT_MODE,false);
         startActivity(addContactActivity);

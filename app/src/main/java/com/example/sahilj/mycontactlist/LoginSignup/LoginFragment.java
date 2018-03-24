@@ -100,80 +100,46 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         btnResendCode.setOnClickListener(this);
         btnVerifyCode.setOnClickListener(this);
 
-
-        //change view to initial
-        //changeView(LOGIN_VIEW, false);
-
-
         //Attach Carrier Number Edit text
         ccp.registerCarrierNumberEditText(etMobileNumber);
 
         // Initialize phone auth callbacks
-        // [START phone_auth_callbacks]
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
-                // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly
-                //     verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically
-                //     detect the incoming verification SMS and perform verification without
-                //     user action.
                 Log.d(TAG, "onVerificationCompleted:" + credential);
-                // [START_EXCLUDE silent]
-                mVerificationInProgress = false;
-                // [END_EXCLUDE]
-
-                // [START_EXCLUDE silent]
-                // Update the UI and attempt sign in with the phone credential
-                //changeView(CODE_VERIFICATION_VIEW, false);
-                // [END_EXCLUDE]
-                signInWithPhoneAuthCredential(credential);
+                mVerificationInProgress = false; //Change state of verification progress
+                signInWithPhoneAuthCredential(credential); //On Verification complete sing In with That credential
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
                 Log.w(TAG, "onVerificationFailed", e);
-                // [START_EXCLUDE silent]
-                mVerificationInProgress = false;
-                // [END_EXCLUDE]
 
+                mVerificationInProgress = false; //Change state of verification progress
+
+                //if number is invalid set error
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                    // [START_EXCLUDE]
                     etMobileNumber.setError("Invalid phone number.");
-                    // [END_EXCLUDE]
                 }
 
-                // Show a message and update the UI
-                // [START_EXCLUDE]
-                changeView(LOGIN_VIEW,true);
-                // [END_EXCLUDE]
+                changeView(LOGIN_VIEW,true); //changeView to Login page
             }
 
             @Override
             public void onCodeSent(String verificationId,
                                    PhoneAuthProvider.ForceResendingToken token) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
+
                 Log.d(TAG, "onCodeSent:" + verificationId);
 
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
 
-                // [START_EXCLUDE]
-                // Update UI
                 changeProgressBar();
-                changeView(CODE_VERIFICATION_VIEW,false);
-                // [END_EXCLUDE]
+                changeView(CODE_VERIFICATION_VIEW,false); //Change view to code verification page
             }
         };
-        // [END phone_auth_callbacks]
 
         return view;
     }
@@ -184,10 +150,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        //Get activity which called fragment
         if (context instanceof Activity){
             mActivity=(Activity) context;
         }
-
     }
 
     @Override
@@ -208,7 +174,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void startPhoneNumberVerification(String phoneNumber) {
-        // [START start_phone_auth]
         try {
             PhoneAuthProvider.getInstance().verifyPhoneNumber(
                     phoneNumber,        // Phone number to verify
@@ -216,12 +181,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     TimeUnit.SECONDS,   // Unit of timeout
                     mActivity,               // Activity (for callback binding)
                     mCallbacks);        // OnVerificationStateChangedCallbacks
-            // [END start_phone_auth]
 
             mVerificationInProgress = true;
         }catch (Exception e){
             Log.v(TAG,e.getMessage());
-            Toast.makeText(getContext(), "Error!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Oops!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -247,24 +211,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     // sign in with Mobile Number
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
+        //try to sing in with provided credentials
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-
-                            changeActivity();
-                            // [END_EXCLUDE]
+                            changeActivity(); // redirect to welcome activity
                         } else {
-                            // Sign in failed, display a message and update the UI
+                            // Sign in failed, display a message
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                                // [START_EXCLUDE silent]
                                 etVerificationField.setError("Invalid code.");
-                                // [END_EXCLUDE]
                             }
                             Toast.makeText(mActivity, "Oops!", Toast.LENGTH_SHORT).show();
                         }
@@ -276,7 +236,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSignUp:
-                if (ccp.isValidFullNumber()) {
+                if (ccp.isValidFullNumber()) { //Validate number and verify that number
                     etMobileNumber.setError(null);
                     changeProgressBar();
 
@@ -318,12 +278,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btnVerification:
                 String code = etVerificationField.getText().toString();
-
                 //Verify Phone Number Using Verification Code
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.btnCodeResend:
-
                 //Resend Verification Code
                 resendVerificationCode(etMobileNumber.getText().toString(),mResendToken);
                 break;
@@ -341,7 +299,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             } else {
                 // Sign in failed, check response for error code
                 try {
-                    Log.v(TAG, "Error Code : " + response.getError().getErrorCode());
+                    if (response != null) {
+                        Log.v(TAG, "Error Code : " + response.getError().getErrorCode());
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -351,6 +311,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void changeProgressBar() {
+        //Toggle progress bar
         if(progressBar.getVisibility() == View.VISIBLE){
             progressBar.setVisibility(View.INVISIBLE);
             barView.setVisibility(View.VISIBLE);
@@ -368,13 +329,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        Animation startFadeOutAnimation;
-        final Animation startFadeInAnimation;
+        Animation startSideOutAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.side_out_left);
+        final Animation  startSideInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.side_in_right);
         switch (loginView){
             case LOGIN_VIEW:
-                startFadeOutAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out_animation);
-                startFadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_animation);
-                startFadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                startSideOutAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
 
@@ -382,7 +341,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        rvSignLayOut.startAnimation(startFadeInAnimation);
+                        rvSignLayOut.startAnimation(startSideInAnimation);
                         llVerificationLayout.setVisibility(View.GONE);
                         rvSignLayOut.setVisibility(View.VISIBLE);
                     }
@@ -392,13 +351,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                     }
                 });
-                llVerificationLayout.startAnimation(startFadeOutAnimation);
-
+                llVerificationLayout.startAnimation(startSideOutAnimation);
                 break;
             case CODE_VERIFICATION_VIEW:
-                startFadeOutAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out_animation);
-                startFadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_animation);
-                startFadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                startSideOutAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
 
@@ -406,7 +362,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        llVerificationLayout.startAnimation(startFadeInAnimation);
+                        llVerificationLayout.startAnimation(startSideInAnimation);
                         llVerificationLayout.setVisibility(View.VISIBLE);
                         rvSignLayOut.setVisibility(View.GONE);
                     }
@@ -416,11 +372,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                     }
                 });
-                rvSignLayOut.startAnimation(startFadeOutAnimation);
+                rvSignLayOut.startAnimation(startSideOutAnimation);
                 break;
         }
     }
 
+    //Redirect user to main activity
     private void changeActivity() {
         Intent welcomeIntent = new Intent(getContext(), Welcome.class);
         startActivity(welcomeIntent);

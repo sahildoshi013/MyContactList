@@ -23,7 +23,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             final ImageView imgLogo = findViewById(R.id.imgWelcomeCompanyLogo);
 
             final boolean isLogin = MyUtilities.isUserLogin();
-            //FadeOut Animation
+
+            //Fade in Logo with Animation
             final Animation startFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in_animation);
             startFadeInAnimation.setRepeatMode(Animation.ABSOLUTE);
             startFadeInAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -51,9 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 }
             });
-            startFadeInAnimation.setDuration(3000);
             imgLogo.startAnimation(startFadeInAnimation);
-
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -40,15 +40,7 @@
             android:label="@string/title_activity_display_contact"
             android:parentActivityName=".Welcome"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".Welcome"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.sahilj.mycontactlist.Welcome" />
-        </activity>
+
         <activity android:name=".ContactsOnMapActivity" android:parentActivityName=".Welcome"/>
     </application>
 
